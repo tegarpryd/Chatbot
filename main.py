@@ -1,7 +1,7 @@
-import tegarbot
-import tegarbot.namedtuple
-from tegarbot.namedtuple import File, InlineKeyboardMarkup, InlineKeyboardButton
-from tegarbot.namedtuple import ReplyKeyboardMarkup, ReplyKeyboardRemove, KeyboardButton, ForceReply
+import amanobot
+import amanobot.namedtuple
+from amanobot.namedtuple import File, InlineKeyboardMarkup, InlineKeyboardButton
+from amanobot.namedtuple import ReplyKeyboardMarkup, ReplyKeyboardRemove, KeyboardButton, ForceReply
 import random
 import requests
 from bs4 import BeautifulSoup
@@ -14,7 +14,7 @@ from datetime import datetime
 from config import TOKEN, ADMIN, OWNER, CHANNEL, GROUP, PROJECT_NAME
 
 token = TOKEN
-bot = tegarbot.Bot(token)
+bot = amanobot.Bot(token)
 
 queue = {
 	"free":[],
