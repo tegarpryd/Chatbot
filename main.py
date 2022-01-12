@@ -62,7 +62,7 @@ def handle(update):
 
 		if uid in queue["occupied"]:
 			if 'text' in update:
-				if text != "/stop" and text != "❌ Akhiri" and text != "➡ Skip️" and text != "/next":
+				if text != "/stop" and text != "/skip":
 					bot.sendMessage(queue["occupied"][uid], "" + text)
 			
 			if 'photo' in update:
@@ -104,12 +104,12 @@ def handle(update):
 				keyboard = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="ɢʀᴜᴘ ᴄʜᴀᴛ", url=f"t.me/{GROUP}"),InlineKeyboardButton(text="ᴄʜᴀɴɴᴇʟ", url=f"https://t.me/{CHANNEL}")]])
 				keyboard2 = ReplyKeyboardMarkup(keyboard=[['Cari Partner🔍'],['Pengguna👤','MENU BOT✅']], resize_keyboard=True, one_time_keyboard=True)
 				bot.sendMessage(uid, "_🔄 Memulai bot..._", parse_mode='MarkDown', disable_web_page_preview=True, reply_markup=keyboard2)
-				bot.sendMessage(uid, f"╭━━◈━━◈━━━━━━━━━━━━━━━━━━━━━\n┃• Selamat Datang Di Anonymous Chat ⚡\n┃• Temukan Pasangan Anda Secara Anonim🙈\n┃• Ketik /search untuk mencari partner\n╰━━◈━━◈━━━━━━━━━━━━━━━━━━━━━\n", parse_mode='MarkDown', disable_web_page_preview=True , reply_markup=keyboard)
+				bot.sendMessage(uid, f"╭━━◈━━◈━━━━━━━━━━━━━━━━━━━━━\n┃• Selamat Datang Di Cari ID Bot ⚡\n┃• Temukan Pasangan Anda Secara Instan🙈\n┃• Ketik /search untuk mulai mencari\n╰━━◈━━◈━━━━━━━━━━━━━━━━━━━━━\n", parse_mode='MarkDown', disable_web_page_preview=True , reply_markup=keyboard)
 		if 'message_id' in update:
 			if not uid in queue["occupied"]:
-				if text != "/start" and text != "Pengguna👤" and text !="➡ Skip️" and text != "/refresh" and text != "/help" and text != "/search" and text != "Cari Partner🔍" and text != "MENU BOT✅" and text != "🔄 Kembali" and text != "Info Profile 📌" and text != "Covid-19〽️"  and text != "/user" and text != "nulis✍":
+				if text != "/start" and text != "/help" and text != "/cari":
 					news = ReplyKeyboardRemove()
-					bot.sendMessage(uid, "_[❗️] Maap kamu sedang tidak dalam obrolan\nSilahkan Klik /refresh atau /search pada bot_", parse_mode="MarkDown",reply_markup=news, reply_to_message_id=update['message_id'])
+					bot.sendMessage(uid, "_[❗️] Maap kamu sedang tidak dalam obrolan\nSilahkan /cari_", parse_mode="MarkDown",reply_markup=news, reply_to_message_id=update['message_id'])
 
 
 		if text == "/test":
@@ -151,38 +151,22 @@ def handle(update):
 				_id = update["from"]["id"]
 				bot.sendMessage(uid, f"Nama = {name}\nID = `{_id}`\nBahasa = {bahasa}", parse_mode="MarkDown")
 
-		elif text == 'Cari Partner🔍' or text == "/search":
+		elif text == "/cari":
 			if not uid in queue["occupied"]:
 				keyboard = ReplyKeyboardRemove()
-				bot.sendMessage(uid, '_Mencari pasangan..._',parse_mode='MarkDown', reply_markup=keyboard)
+				bot.sendMessage(uid, '_Mencari pasangan..._',parse_mode='MarkDown')
 				print("[SB] " + str(uid) + " Join ke obrolan")
 				queue["free"].append(uid)
 
-		elif text == '❌ Akhiri' or text == '/stop' and uid in queue["occupied"]:
+		elif text == '/stop' and uid in queue["occupied"]:
 			print('[SB] ' + str(uid) + ' meninggalkan jodohnya ' + str(queue["occupied"][uid]))
 			keyboard = ReplyKeyboardMarkup(keyboard=[['Cari Partner🔍'],['Pengguna👤','MENU BOT✅']], resize_keyboard=True, one_time_keyboard=True)
-			bot.sendMessage(uid, "_Kamu mengakhiri obrolan!_", parse_mode='MarkDown', reply_markup=keyboard)
-			bot.sendMessage(queue["occupied"][uid], "_Partner kamu keluar dari obrolan_", parse_mode='MarkDown', reply_markup=keyboard)
+			bot.sendMessage(uid, "_Kamu menghentikan pencarian!_", parse_mode='MarkDown')
+			bot.sendMessage(queue["occupied"][uid], "_Pasangan Kamu menghentikan pencarian_", parse_mode='MarkDown')
 			del queue["occupied"][queue["occupied"][uid]]
 			del queue["occupied"][uid]
 
-		elif text == 'MENU BOT✅':
-			keyboard = ReplyKeyboardMarkup(keyboard=[
-				['/refresh', 'Covid-19〽️'],['🔄 Kembali'],['nulis✍']
-			], resize_keyboard=True, one_time_keyboard=True)
-			bot.sendMessage(uid, f"MENU BOT", reply_markup=keyboard)
-		elif text == 'nulis✍':
-			bot.sendMessage(uid, "_fitur akan segera hadir.._")
-		elif text == 'Covid-19〽️':
-			web = requests.get('https://www.worldometers.info/coronavirus/country/indonesia/')
-			tampilan = BeautifulSoup(web.content, 'html.parser')
-			dataweb = tampilan.find_all("div", {"class": "maincounter-number"})
-			ouy = "*KASUS VIRUS COVID-19 DI INDONESIA 🇮🇩*\n\nTerpapar Virus : {} Orang\nMeninggal : {} Orang\nSembuh : {} Orang".format(dataweb[0].span.text,dataweb[1].span.text,dataweb[2].span.text)
-			bot.sendMessage(uid, ouy, parse_mode='MarkDown')
-		elif text == '🔄 Kembali':
-			keyboard = ReplyKeyboardMarkup(keyboard=[['Cari Partner🔍'],['Pengguna👤','MENU BOT✅']], resize_keyboard=True, one_time_keyboard=True)
-			bot.sendMessage(uid, "_🔄 Kembali_", parse_mode='MarkDown', disable_web_page_preview=True, reply_markup=keyboard)
-		elif text == "➡ Skip️" or text == "/next" and uid in queue["occupied"]:
+		elif text == "/skip" and uid in queue["occupied"]:
 			print('[SB] ' + str(uid) + ' meninggalkan obrolan dengan ' + str(queue["occupied"][uid]))
 			keyboard = ReplyKeyboardMarkup(keyboard=[['Cari Partner🔍', '🔄 Kembali']], resize_keyboard=True, one_time_keyboard=True)
 			bot.sendMessage(uid, "_Kamu mengakhiri obrolan!_",parse_mode="MarkDown")
@@ -191,7 +175,7 @@ def handle(update):
 			del queue["occupied"][uid] 
 			if not uid in queue["occupied"]:
 				key = ReplyKeyboardRemove()
-				bot.sendMessage(uid, '_Mencari pasangan baru..._',parse_mode="MarkDown" ,reply_markup=key)
+				bot.sendMessage(uid, '_Mencari id baru..._',parse_mode="MarkDown")
 				print("[SB] " + str(uid) + " Join ke obrolan") 
 				queue["free"].append(uid)
 		
@@ -205,8 +189,8 @@ def handle(update):
 				queue["free"].remove(partner)
 				queue["occupied"][uid] = partner
 				queue["occupied"][partner] = uid
-				bot.sendMessage(uid, '_Partner ditemukan🙈\n/next -- cari partner baru\n/stop -- akhiri obrolan_',parse_mode='MarkDown', reply_markup=keyboard)
-				bot.sendMessage(partner, '_Partner ditemukan🙈\n/next -- cari partner baru\n/stop -- akhiri obrolan_',parse_mode='MarkDown', reply_markup=keyboard)
+				bot.sendMessage(uid, '_ID ditemukan🙈\n/skip -- cari partner baru\n/stop -- akhiri pencarian_\n\n',parse_mode='MarkDown')
+				bot.sendMessage(partner, '_ID ditemukan🙈\n/skip -- cari partner baru\n/stop -- akhiri pencarian_\n\n',parse_mode='MarkDown')
 	except 	Exception as e:
 		print('[!] Error: ' + str(e))
 
